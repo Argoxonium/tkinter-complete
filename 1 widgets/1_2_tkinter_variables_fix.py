@@ -6,7 +6,7 @@ window = tk.Tk()
 window.title('Tkinter Variables')
 
 # tkinter variable
-string_var = tk.StringVar()
+string_var = tk.StringVar(Value = 'Start value')
 
 # widgets 
 label = ttk.Label(master = window, text = 'label', textvariable = string_var)
@@ -20,3 +20,4 @@ entry2.pack()
 
 # run 
 window.mainloop()
+

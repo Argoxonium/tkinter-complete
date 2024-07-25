@@ -242,3 +242,45 @@ def button_func():
 	
 ```
 
+## `Tkinter` Variables
+`tkinter` variables are probably something that you want to use most of the time. Since `Tkinter` has inbuilt variables that are designed to work with widgets. They are automatically updated by the widget and they update a widget. Although they still store basic data like strings, integers and Booleans. Here we will use strings as an example. 
+For an example program let's make a label that should always have the same text as the entry at all times. Basically we are creating a **StringVar**. The string variable will automatically be set from the entry widget and will automatically set this string for the label.
+![[Pasted image 20240725151042.png]]
+
+In order to perform this connection we're going to create a window that has label and entry. In order to connect the label in the entry so that the label displays whatever is in the entry we will need to use a `.StringVar()` That is set to a variable. Within both the label and the entry we are actually going to add another argument called text variable and set it equal to our `.StringVar()` 
+variable. This way the entry will be automatically updating the text variable argument while the label will have an override to the text argument with the text variable argument. 
+
+```python
+import tkinter as tk
+from tkinter import ttk
+
+#Window
+window = tk.Tk()
+window.title('Tkinter Variables')
+
+#tkinter variable
+string_var = tk.StringVar()
+
+#widgets
+label = ttk.Label(master = window, text = 'label', textvariable = string_var)
+label.pack()
+entry = ttk.Entry(master = window, textvariable = string_var)
+entry.pack()
+
+#run
+window.mainloop()
+```
+
+In addition you could create another entry variable called entry variable two and have that set to the entry widget. Then that witch's argument for the text variable could also be set to the string var variable and All the widgets would be set to the same string variable at all times. 
+
+You can even go beyond this and pull the string variable and get the information from it. If you used a button and set the command to the button function and within that button function your printing the string variable with `.get()`, You will receive the string variable that is currently in that variable imprinted out. Below is an example of what the button code would look like and the function. Not only can you get information when you press the button but also you can set information with the `.set()` method. Therefore after the button is pressed it will change the string variable after recording and printing to the terminal what was already in the sting variable. 
+
+```python
+def button_func():
+	print(string_var.get())
+	string_var.set('button pressed')
+
+button = ttk.Button(master = window, text = 'button', command = button_func)
+button.pack()
+```
+
