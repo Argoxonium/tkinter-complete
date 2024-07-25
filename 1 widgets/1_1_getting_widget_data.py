@@ -3,7 +3,7 @@ from tkinter import ttk
 
 def button_func():
 	# get the content of the entry
-	entry_text = entry.get()
+	entry_text = entry.get() #will return the data from entry. 
 
 	# update the label
 	# label.configure(text = 'some other text')
