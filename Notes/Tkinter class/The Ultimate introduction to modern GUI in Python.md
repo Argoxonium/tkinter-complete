@@ -173,7 +173,7 @@ This example code will run and form a window with a label entry field and button
 > You do have to be careful with the `.get()` method because not a lot of widgets actually use the docket method. 
 
 
-## Changing Widgets in a Loop
+## Configuring Widgets in a Loop
 Every single widget in `Tkingter` has a config method. You can update information and these two methods are the same.
 ```python
 Label.config(text='some new text')
@@ -581,3 +581,347 @@ def outer_func(parameter):
 since the parameter is acting like the `entry_string` variable that's fine. The important part is the `return` and that its returning the `inner_func`. To know more, you need to understand functions and how they interact with return. 
 
 ## Event Binding
+Events can be lots of things and they can be observed and used. Some events are:
+- Keyboard inputs
+- widgets getting changed
+- widgets getting selected or unselected
+- mouse click/motion/wheel
+
+Events can be used easily, by binding events to a widget like so;
+`Widget.bind(event, function)`
+
+to format the event the following format would be: modifier - type - detail like so:
+`Alt-Keypress-a`
+
+Here we will create a event through by creating our window with a text widget, entry, button and an event using a lambda function. The event will be a key binging `Alt+a` that will activate a print function when the window is selected. Therefore the event will be tied to our window. 
+```python
+import tkinter as tk
+from tkinter import ttk
+
+#Window
+window = tk.Tk()
+window.title('Event Binding')
+window.geometry('600x400')
+
+#widgets
+#test
+text = tk.Text(window)
+text.pack()
+#Entry
+entry = ttk.Entry(window)
+entry.pack()
+#button
+button = ttk.Button(window, text = 'A button')
+button.pack()
+
+#events
+window.bind(event, lambda: print('an event'))
+
+#run
+window.mainloop()
+```
+
+Though this will not run because our event argument isn't in the correct format as stated above. Events are always made as a sting and it needs a modifier-type-detail then enclose that in like so `'<modifier-type-detail>'`.
+> [!important]
+> Tkinter will automatically input an argument into you function so you need to account for that.
+> 
+
+To accept a argument with lambda you do the following: `lambda Arg: print('An Event')` and knowing all that your event should look like this;
+
+```python
+#events
+window.bind('<Alt-KeyPress-a>', lambda event: print('an event'))
+```
+ 
+But if you print your argument `event` you will notice it returns multiple items that you can use when working with events. There are quite a few events that you can work with and you can find them all on [Python Tutorial](https://www.pythontutorial.net/tkinter/tkinter-event-binding/). Hello this is anting works for the window what if we wanted to tie it to other things say a button. Using the following text we can go ahead and tie this tool button when the button is selected and then press the key bindings `Alt+a`. Here we can have a and then tied to the button variable and then tied to the window variable doing different things. For the window event we're going to do something new and try to print the position of the even. We can do this by using the event variable or argument that is inputted to our function that we discussed earlier that Tkinter always inputs for events so for our command or functions we will call it get_pos.
+
+```python
+#events
+button.bind('<Alt-KeyPress-a>', lambda event: print('an event'))
+window.bind('<Motion>', get_pos)
+```
+Using the Motion, We are able to track the mouse in real time while it is on the window. in order to print this and identify it with the get position function we accept an argument of advent which is given automatically by taking inter and within the many items inside that variable we are going to pull the ax position using `event.x & event.y`. For display reasons we are going to use an F string within the print statement to help show the numbers in real time changing.  
+
+> [!info]
+> This kind of detection works well with the window because the window is always selected but you can change it for a specific widget say the text widget. If you do select the text widget the recording of the position will only be active while you're on or have the text which it selected otherwise moving your cursor somewhere else on the window it will stop recording the position.
+
+```python
+#define the function get_pos:
+def get_pos(event): #has to accept an argument
+	print(f'X: {event.x} Y: {event.y}')
+```
+
+And as you can see with the motion detection you can tell that the format`Alt-KeyPress-a` Doesn't need in all cases. Case we could just do keypress and then tie the print statement up in a F string so that we can detect what buttons are being pressed at every moment within the window.  Here we can see that when a button is pressed within the window it'll be displayed in the terminal what buttons were pressed. This could be used for key bindings or other specifics for program.
+
+```python
+#events
+window.bind('<KeyPress>', lambda event: print(f'a button was pressed({event.char})'))
+```
+
+Another very powerful item in events that you might be using quite often is detecting whether something is selected or deselected. Here we can bind an event to the entry widget and determine whether it is selected or deselected by changing the invent characteristics to `FocusIn & FocusOut`. Allowing us to detect when the entry widget is selected and deselected.
+```python
+entry.bind('<FocusIn>', lambda event: print('Entry field was selected'))
+entry.bind('<FocusOut>', lambda event: print('Entry field was deselected'))
+```
+
+### Exercise:
+My Answer and this is correct :)
+```python
+text.bind('<Shift-MouseWheel>'), lambda event: print('Mousewheel')
+```
+
+## Combobox and Spinbox
+A `combobox` is basically a dropdown menu while a `spinbox` is switching through items. Both need a list of values to be inputted and both can be connected with a `Tkinter` variable. Fairly simple and like the other widgets we have seen. Here for the combo box we are looking at a simple window with a combo box widget. We're going to also create a list of 3 items that are going to go into that combo box. In order to get that list into the combo box which there are a couple of ways that you can do it but we will use [[#Configuring Widgets in a Loop| Configure method]] to show first. In addition we're going to set a string variable to our combo box. But just like using the string method in other widgets this starting value needs to be set and in our case we're going to set it to the first item within the list.
+
+```python
+import tkinter as tk
+from tkinter import ttk
+
+#Window
+window = tk.Tk()
+window.title('Event Binding')
+window.geometry('600x400')
+
+#items list
+items = ['Ice Cream', 'Pizza', 'Broccoli']
+
+#tkvariables
+food_string = tk.StringVar(value = item[0]) the
+
+#Widget
+combo = ttk.Combobox(window)
+combo['values'] = items #using our configure method
+
+#run
+window.mainloop()
+```
+
+In addition we can set events to combo boxes and uniquely the combo box has one event type that is set to it call the combo box selected. This is identified with `<< >>`.
+
+```python
+combo.bind('<<ComboboxSelected>>', lambda event: ptint(food_string.get()))
+```
+
+Thin boxes work almost similarly to a combo box which is why they're explained at the same time. You had them in like a normal widget and then you pack it on to the window. Once attached to the window you will have an up and down arrow to cycle through the different options. To set the different options you do the same thing where you use the  [[#Configuring Widgets in a Loop|Configure method]].  
+
+```python
+import tkinter as tk
+from tkinter import ttk
+
+#Window
+window = tk.Tk()
+window.title('Event Binding')
+window.geometry('600x400')
+
+#items list
+items = ['Ice Cream', 'Pizza', 'Broccoli']
+
+....
+
+#Spinbox
+spin = ttk.Spinbox(window)
+spin['value']=[1,2,3,4,5]
+spin.pack()
+
+
+#run
+window.mainloop()
+```
+
+So in our case there isn't much easier way to add a number line within a spin box since this is going to be your primary dedication for a spin boxes to adjusting numbers. Here instead you can set the to and from within a spin box between a number range that way I can cycle through.
+> [!danger]
+> When using from you need to have it types out as `from_`. Otherwise you'll get an error.
+
+In addition you can set the increments of the number range of how much they increase instead of it being at one it can be incremental 23 and so on and so forth. Unfortunately increments can also be quite glitchy so you do need to keep in mind when you're doing that because it will set up a cut off point if your numbers are not in the increment range.
+```python
+#Spinbox
+spin = ttk.Spinbox(window, from_ = 3, to = 20, incrament = 3)
+#spin['value']=[1,2,3,4,5]
+spin.pack()
+```
+
+Just like other widgets you can also set the spin box with a command and events can be controlled within the spinbox. Specialized defense that you can use are increment and decrement which adjusts when the up air or down arrow is being used.
+
+```python
+#Spinbox
+spin = ttk.Spinbox(window, from_ = 3, to = 20, incrament = 3, command = lambda: print('a arror was pressed'))
+spin.bind('<<Increment>>', lambda event: print("UP"))
+spin.bind('<<Decrement>>', lambda event: print("DOWN"))
+spin.pack()
+```
+
+Variables can also be used and set within a Spinbox. In our case we can use a spin integer and set the spin box with its text variable.
+```python
+#Spinbox
+spin_int = tk.IntVar(value = 12)
+spin = ttk.Spinbox(window, 
+				   from_ = 3, 
+				   to = 20, 
+				   incrament = 3, 
+				   command = lambda: print(spin_int.get()),
+				   textvariable = spin_int)
+spin.bind('<<Increment>>', lambda event: print("UP"))
+spin.bind('<<Decrement>>', lambda event: print("DOWN"))
+spin.pack()
+```
+
+### Exercise:
+```python
+#create a list of letters
+exercise_letters = ['A', 'B', 'C', 'D', 'E']
+exercise_string = tk.StringVar(value = exercise_letters[0])
+exercise_spin = ttk.Spinbox(
+							window, 
+							textvariable = exercise_string, 
+							values = exercise_letters
+							)
+#or you can do
+excersie_spin['values'] = exercise_letters
+
+exercise_spin.pack()
+
+#create a event to print a value when value decreases
+excercise_spin.bind('<<Decrement>>', lambda event: print("DOWN"))
+```
+
+## Canvas
+He campuses a widget that allows you to draw shapes. like a drawing squares circles limes tacks etc. In the most basic sense we are creating a very basic version of paint. Here you can find that while we're doing this which the only import that we need is tk. Now if you just introduce the widget within the program window you will find that there doesn't seem to be anything but in the actual sense the widget is there it is just invisible due to the background color. So in our case we're going to set the background to white so we can visually see the canvas.
+
+```python
+import tkinter as tk
+
+#Window
+window = tk.Tk()
+window.title('Canvas')
+window.geometry('600x400')
+
+#canvas
+canvas = tk.Canvas(window, bg = 'white')
+canvas.pack()
+
+#run
+window.mainloop()
+```
+
+We can start with creating a rectangle within the campus. this is to help us look at the different methods that can be used in campus. Case we're going to create an outlined rectangle with a tuple variable. But that variable we will describe the four points of the rectangle and where those lines will be located. In addition we will want to fill the rectangle with red using the fill argument and describe the width as zero so that it removes the borderline. 
+
+```python
+#canvas
+canvas = tk.Canvas(window, bg = 'white')
+canvas.pack()
+
+canvas.create_rectangle((50, 20, 100, 200), fill = 'red', width = 0)
+```
+
+> [!info]
+> For more details on this widget you can go to [New Mexico Techs](https://anzeljg.github.io/rin2/book2/2405/docs/tkinter/index.html) website.
+
+**I skipped the rest of the video at 2:14:00 because I can learn this later.**
+
+## Treeview(table)
+Just like canvases paint tree view is like Excel but we're creating a table. Here we're going to be looking at creating a window that makes a table where you can select the entries and delete entries. In activating the tree view widget you will find that a blank square pops up and that is because we need to start adding in our elements into the table. To do this we need to tell the program how many columns there are by naming those columns. Case we're going to name three columns first, last, email. After that we want to give each of those columns a headache so that data does not show up first for each of those columns. Therefore afterwards we're going to specify the heading by doing the variable name dot heading as the method Within the hair we're going to specify the column and then the next argument is going to be what we're naming that heading. We have to go back to the table and say that we want to show the headings for each column.
+
+```python
+import tkinter as tk
+
+#Window
+window = tk.Tk()
+window.title('Canvas')
+window.geometry('600x400')
+
+# data
+
+first_names = ['Bob', 'Maria', 'Alex', 'James', 'Susan', 'Henry', 'Lisa', 'Anna', 'Lisa']
+
+last_names = ['Smith', 'Brown', 'Wilson', 'Thomson', 'Cook', 'Taylor', 'Walker', 'Clark']
+
+table = ttk.Treeview(window, columns = ('first', 'last', 'email'), show = 'headings')
+table.heading('first', text = 'First Name')
+table.heading('last', text = 'Last Name')
+table.heading('email', text = 'Emai')
+table.pack()
+
+#run
+window.mainloop()
+```
+
+To put this information within the table you're going to use the insert method on the table variable. First argument within the insert is going to be parent. Used for relating data within the table if you're trying to identify particular item but in this case we're going to have it blanked for now. Then you want index and values. We're going to currently set to this one item and since we have three columns we need to have three items in our tuple.
+```python
+#insert values into table
+table.insert(parent = '', index = 0, values = ('John', 'DOE', 'JohnDoe@emal.com'))
+```
+
+In our case we don't have a plethora of data to use so we're going to have to randomize it. In importing the randomizing library we are able to import choice for random choice from the list that we have provided for first name and last name. We want to create at least 100 entries into the table so we will create a for loop to go for a range of 100 and we're going to create a first name last name and then generate an email from that. Once that's created we'll insert that into the table like we saw before. In our case we're going to use our variable that is a tuple that has first last and email and insert that into the table. In addition you can also see that we're wanting to expand the table fully so you can see that pack as fill as in both and expand equal true.
+```python
+# data
+
+first_names = ['Bob', 'Maria', 'Alex', 'James', 'Susan', 'Henry', 'Lisa', 'Anna', 'Lisa']
+
+last_names = ['Smith', 'Brown', 'Wilson', 'Thomson', 'Cook', 'Taylor', 'Walker', 'Clark']
+
+table = ttk.Treeview(window, columns = ('first', 'last', 'email'), show = 'headings')
+table.heading('first', text = 'First Name')
+table.heading('last', text = 'Last Name')
+table.heading('email', text = 'Emai')
+table.pack(fill = 'both', expand = True)
+
+for i in range(100)
+	first = choice(first_names)
+	last = choice(last_names)
+	email = f'{first}{last}@gmail.com'
+	data = (first, last, email)
+	table.insert(parent = '', index = 0, values = data)
+```
+
+Now what if we wanted to place items in a very particular order. For that is the point of `index` Within the arguments. Say we wanted to create a variable tuple that will insert a random set of data into the table but we wanted it at the first position, we would set the index equal to zero but if we wanted it at the second position we would set it to one. Though sometimes we don't understand how large our tables are in putting items at the end of the table is crucial but you don't know exactly what the number is. Therefore you can fetch the end of the table with `tk.END`.
+
+```python
+table.insert(parent = '', index = 1, values = ('XXXXX', 'YYYYY', 'ZZZZZ'))
+table.insert(parent = '', index = tk.END, values = ('XXXXX', 'YYYYY', 'ZZZZZ'))
+```
+
+They're just like other widgets you can use advance and items are involved inside the table. Combining these two together can be extremely powerful and what you want to do with the data within the table. In our case we can create a binding event that specialized to tables and whenever we select an item within the table it will print that item in the terminal.
+
+```python
+#event
+table.bind('<<TreeviewSelect>>', lambda event: print(table.selection()))
+```
+
+Now in our case we want to grab a selection of the items within the table and have it print out the variables or values itself. And doing this we're going to need to create a new function that deals with the items within the event. Case well we've captured those items for each piece we'll print it. One while doing this we have to keep in mind that our selection if not just by one variable so the return will always be a tuple therefore you should have a for loop within there so that we can evaluate all the selected items in case of there's more than one.
+
+```python
+#event
+def item_select(_):
+    print(table.selection())
+    for i in table.selection():
+        print(table.item(i)['values'])
+    # table.item(table.selection())
+
+table.bind('<<TreeviewSelect>>', item_select)
+```
+
+In our case we've used the table selection as a variable item and in that case we can do something quite unique when selecting the items, delete them. So in the event of deleting those items we can create a new bind argument to the table or when delete is pressed it will run the function to delete items In that function we've printed delete saying to the user that we deleted stuff but we're also going to need to do a selection for each of those items that we've selected we're going need to evaluate them and then remove them from the table using the delete method.
+```python
+# events
+
+def item_select(_):
+    print(table.selection())
+    for i in table.selection():
+        print(table.item(i)['values'])
+    # table.item(table.selection())
+
+def delete_items(_):
+    print('delete')
+    for i in table.selection():
+        table.delete(i)
+
+  
+
+table.bind('<<TreeviewSelect>>', item_select)
+table.bind('<Delete>', delete_items)
+```
+
+> [!attention]
+> Staples are probably one of the most complicated pieces of the widgets as they get quite complicated in their code and what they want you to do. So evaluate the documentation and follow through and you might be able to create something really interesting.
+
+## Sliders
