@@ -284,3 +284,300 @@ button = ttk.Button(master = window, text = 'button', command = button_func)
 button.pack()
 ```
 
+## Buttons
+There are three kinds of buttons used in `tkinter` witch are **Buttons, Checkbuttons, and Radiobuttons**. To use any button properly you need `tkinter` variables. Here we will show what we already have seen before, where there is a window and a basic button that has a name and prints text when pressed. In addition we are going to attach a stringvar to it. 
+
+> [!info]
+> The first argument of any button is what is the master. Therefore you can just type `window` and it be the same as `master = window`.
+
+```python
+import tkinter as tk
+from tkinter import ttk
+
+#Window
+window = tk.Tk()
+window.title('Buttons')
+window.geometry('600x400')
+
+#Basic Button
+def button_func():
+	print('a basic button')
+
+#stringvar
+button_string = tl.StringVar(value = 'A button with string var')
+
+button = ttk.Button(winow, text = 'A simple button', command = button_func)
+
+...
+
+#run
+window.mainloop()
+```
+
+### Checkbox
+When we want to add a checkbox button its similar to a button; we use ttk, and need to set the same arguments. 
+```python
+import tkinter as tk
+from tkinter import ttk
+
+...
+
+check = ttk.Checkbutton(window, text = 'checkbox1', command = lambda: print('hello'))
+check.pack()
+
+...
+
+```
+Though what happens when we do `check.get()`? unfortunately we get an error. In order to get a value we need a `tk variable`. for in this case we can use a string var. **But** there is no textvariable with a checkbox, just a variable. This is because we aren't going to change the text variable but we are going to store weather this variable exists or not. Then in that case we can use `.get()` with our variable. 
+
+```python
+import tkinter as tk
+from tkinter import ttk
+
+...
+check_var = tk.StringVar()
+check = ttk.Checkbutton(window, 
+						text = 'checkbox1', 
+						command = lambda: print(check_var.get())
+						Variable = check_var)
+check.pack()
+
+...
+
+```
+
+This this case when we print this it will return a 1 or 0. but instead we can also use an `.IntVar()`. Storing an integer var. or we can run a `tk.BooleanVar()` to return True or False.
+But what if you don't want to return an 1 or 0. well you can edit this with the `onvalue` & `offvalue` arguments in the a check button.
+```python
+import tkinter as tk
+from tkinter import ttk
+
+...
+check_var = tk.StringVar()
+check = ttk.Checkbutton(window, 
+						text = 'checkbox1', 
+						command = lambda: print(check_var.get())
+						Variable = check_var,
+						onvalue = 10,
+						offvalue = 5)
+check.pack()
+
+...
+
+```
+
+### Radio Button
+Just like the two other buttons you use `ttk.Radiobuttion` to create a button, set it to window and describe its text. Though something weird happens when you create a radio button this way. If you click one, it also checks the other button. 
+
+```python
+import tkinter as tk
+from tkinter import ttk
+
+...
+radio1 = ttk.Radiobuttion(window, text = 'Radiobuttion 1')
+radio1.pack()
+radio2 = ttk.Radiobuttion(window, text = 'Radiobuttion 2')
+radio2.pack()
+...
+
+```
+
+> [!important]
+> Each Radio button needs its own value!
+
+The default value is always 0 and if you have the same value it returns both checks. 
+
+```python
+import tkinter as tk
+from tkinter import ttk
+
+...
+radio1 = ttk.Radiobuttion(window, text = 'Radiobuttion 1', value = 'radio1)
+radio1.pack()
+radio2 = ttk.Radiobuttion(window, text = 'Radiobuttion 2', value = 2)
+radio2.pack()
+...
+
+```
+
+And just like the other buttons, you can set a command and just like the checkbox, you need to set variables to do `.get()`. A radio button is set up the same way as a checkbox but the major difference is that only one variable can be true. This means that if we attach this to the `button_func()` and print it after checking a ratio button, it will only display that variable for that button. Unlike a checkbox where multiple can be true. 
+
+```python
+import tkinter as tk
+from tkinter import ttk
+
+...
+radio_var = tk.StringVar()
+
+radio1 = ttk.Radiobuttion(window, 
+						  text = 'Radiobuttion 1', 
+						  value = 'radio1',
+						  variable = radio_var,
+						  command = lambda: print(radio_var.get()))
+radio1.pack()
+radio2 = ttk.Radiobuttion(window, 
+						  text = 'radio 2', 
+						  value = 2,
+						  variable = radio_var,
+						  command = lambda: print(radio_var.get()))
+radio2.pack()
+...
+
+```
+
+This is the code together to demonstrate that you can have multiple check boxes while the radio cannot. 
+
+```python
+import tkinter as tk
+from tkinter import ttk
+
+#Window
+window = tk.Tk()
+window.title('Buttons')
+window.geometry('600x400')
+
+#Basic Button
+def button_func():
+	print('a basic button')
+	print(radio_var.get())
+
+#stringvar
+button_string = tl.StringVar(value = 'A button with string var')
+
+button = ttk.Button(winow, text = 'A simple button', command = button_func)
+
+check_var = tk.StringVar()
+check1 = ttk.Checkbutton(window, 
+						text = 'checkbox1', 
+						command = lambda: print(check_var.get())
+						Variable = check_var,
+						onvalue = 10,
+						offvalue = 5)
+check1.pack()
+
+check2 = ttk.Checkbutton(window, 
+						text = 'checkbox1', 
+						command = lambda: print(check_var.get()))
+check2.pack()
+
+radio_var = tk.StringVar()
+
+radio1 = ttk.Radiobuttion(window, 
+						  text = 'Radiobuttion 1', 
+						  value = 'radio1',
+						  variable = radio_var,
+						  command = lambda: print(radio_var.get()))
+radio1.pack()
+radio2 = ttk.Radiobuttion(window, 
+						  text = 'radio 2', 
+						  value = 2,
+						  variable = radio_var,
+						  command = lambda: print(radio_var.get()))
+radio2.pack()
+
+#run
+window.mainloop()
+```
+
+But if you wanted to have the check buttons connected you can set the value to the `offvalue`. So you can if you want to but radios are always connected. This is because `tkinter` is going to check if the variable is equal to the value of the radio button and if it is it will check it. This is what happens when you want to have multiple checks. 
+```python
+check_var = tk.StringVar()
+check1 = ttk.Checkbutton(window, 
+						text = 'checkbox1', 
+						command = lambda: print(check_var.get())
+						Variable = check_var,
+						onvalue = 10,
+						offvalue = 5)
+check1.pack()
+
+check2 = ttk.Checkbutton(window, 
+						text = 'checkbox1', 
+						command = lambda: check_var.set(5))
+check2.pack()
+```
+
+#### create another checkbutton and 2 radiobuttons
+radio button:
+- values for the buttons are A and B
+- ticking either prints the value of the checkbutton
+- ticking the radio button unchecks the checkbutton
+
+check button:
+- ticking the checkbutton prints the value of the radio button value
+- use tkinter var for Booleans!
+```python
+#data
+der radio_func():
+	print(check_bool.get())
+	check_var.set(False)
+	
+#widgets
+radio_string = tk.StingVar()
+radio_1 = ttk.Radiobutton(window,
+						text = 'check button1',
+						Variable = radio_var,
+						value = 'A',
+						command = radio_func)
+
+radio_2 = ttk.Radiobutton(window,
+						text = 'check button2',
+						Variable = radio_var,
+						value = 'B',
+						command = radio_func)
+
+check_var = tk.BooleanVar()
+check = ttk.Checkbutton(window, 
+					   text = 'check buttion',
+					   variable = check_var,
+					   command = lambda: print(radio_string.get()))
+					   
+#layout
+radio_1.pack()
+radio_2.pack()
+check.pack()
+
+```
+
+
+## Functions with Arguments
+Though we have already done this. How? with `lambda:`! Therefore, if you just run a `function()` your code will run but not as intended. It will be running the `button_fun()` with its first argument with none. In that case you can use `lambda:` as your to go to. 
+
+```python
+import tkinter as tk
+from tkinter import ttk
+
+#Window
+window = tk.Tk()
+window.title('Buttons')
+window.geometry('600x400')
+
+#Basic Button
+def button_func(entry_string):
+	print('a button was pressed')
+	print(entry_string.get())
+
+#stringvar
+button_string = tk.StringVar(value = 'test')
+entry = ttk.Entry(window, textvariable = entru_string)
+entry.pack()
+
+button = ttk.Button(winow, text = 'A simple button', command = lambda: button_func())
+
+...
+
+#run
+window.mainloop()
+```
+
+If you didn't want to use `lambda()` you need to create a function withing a function. Now, the outer function will contain you parameter while the inner one will not have any parameters. Instead of printing the `entry_string` variable we will be printing the `parameter.get()`. Because the item being entered is the `entry_string`. Then you need to return the `inner_func()`.
+
+```python
+def outer_func(parameter):
+	def inner_func():
+		print('a button was pressed')
+		print(perameter.get())
+	return inner_func
+```
+since the parameter is acting like the `entry_string` variable that's fine. The important part is the `return` and that its returning the `inner_func`. To know more, you need to understand functions and how they interact with return. 
+
+## Event Binding
