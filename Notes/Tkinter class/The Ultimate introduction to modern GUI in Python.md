@@ -925,3 +925,269 @@ table.bind('<Delete>', delete_items)
 > Staples are probably one of the most complicated pieces of the widgets as they get quite complicated in their code and what they want you to do. So evaluate the documentation and follow through and you might be able to create something really interesting.
 
 ## Sliders
+The fighters can be a few things to wear through the interactive scrolling bar button that you can use to see further down in the document its progress bars or additional edit bars. There are two main widgets to create sliders; Progress bars or slider. These are both one dimension and can be set independently but only sliders can be moved by the user. 
+Here we can create a simple program that is going to demonstrate the scale. We're going to use our basic introduction code with the window and the window main loop but here we're going to use the slider widget. Similar to all the rest of the widgets you will have it as in `TTK` and it will be related to the window variable. But just like some of the other widgets this one automatically gives a value within a function that is called upon within the widget. Therefore a function that is being used inside of the command argument always needs to have a value that is ready to take an argument. 
+```python
+import tkinter as tk
+
+#Window
+window = tk.Tk()
+window.title('Canvas')
+window.geometry('600x400')
+
+#slider
+scale = ttk.Scale(window,command = lambda value: print(value))
+scale.pack()
+#run
+window.mainloop()
+```
+
+In addition just like previous additions to codes you have a to and from variable that can edit from a sliding scale going from zero to 25 for example. In addition you can also determine the length of the slider and pixel size and here we can do it by 300 pixels In addition you can determine the orientation of the slider, the natural orientation is always horizontal but if you want to make it vertical this is what you would need to type.
+```python
+#slider
+scale = ttk.Scale(window,
+				  command = lambda value: print(value), 
+				  from_ = 0, 
+				  to = 25,
+				  length = 300,
+				  orient = 'vertical')
+scale.pack()
+```
+
+In addition you can also set `tk `variables to the widget in this example we can set the int var `tk` variable to say 15. Before if you had the int variable set to nothing the program would act as normal but setting it to 15 when you use the widget will set the widget to 15 when it is opened.
+> [!attention]
+> This widget only takes int values. If you need something more you need to use `tk.DoubleVar()`.
+
+
+```python
+#slider
+scale_int = tk.IntVar(value = 15)
+scale = ttk.Scale(window,
+				  command = lambda value: print(value), 
+				  from_ = 0, 
+				  to = 25,
+				  length = 300,
+				  orient = 'vertical',
+				  variable = scale_int)
+scale.pack()
+```
+
+And justice like the scale which you can set a progress bar using ttk. Uniquely that when you find that you've attached the progress bar together with the slider variable so that when the sliders at certain position the progress barns with it you'll notice that the progress bar doesn't quite match up and that is due to the range. You might think you need to use the two argument but in this case you actually need to use maximum. 
+```python
+progress = ttk.Progressbar(window,
+						   variable = scale_float,
+						   maximum = 25)
+progress.pack()
+```
+
+In addition you can also orient the progress bar in a specific way you can change how the Podrus Bar shows its progress by the mode and you can determine the actual length of the progress bar as well by pixel size.
+```python
+progress = ttk.Progressbar(window,
+						   variable = scale_float,
+						   maximum = 25,
+						   orient = 'horizontal',
+						   mode = 'indetermininate',
+						   length = 400)
+progress.pack()
+```
+
+In addition to the progress bar you have progress start and progress stop. progress start start the activization of the progress bar and it will act a little wonky in that case there really isn't if her need to use progress start progress stop stops that sort of progress. That's something to really practically use but something to keep in mind.
+```python
+scale_int = tk.IntVar(value = 15)
+scale = ttk.Scale(window,
+				  command = lambda value: progress.stop(), 
+				  from_ = 0, 
+				  to = 25,
+				  length = 300,
+				  orient = 'vertical',
+				  variable = scale_int)
+scale.pack()
+
+progress = ttk.Progressbar(window,
+						   variable = scale_float,
+						   maximum = 25,
+						   orient = 'horizontal',
+						   mode = 'indetermininate',
+						   length = 400)
+progress.start(1000)
+
+progress.pack()
+```
+
+There is something more unique from the rest of the widgets called scrolled text. Something that you have to import individually as it's almost like a combination of widgets together but it acts like TTK inter. This widget is very similar to a text widget.
+> [!info]
+> We will learn how to make this on our own later on.
+
+
+```python
+from tkinter import scrolledtext
+
+scrolled_text = scrolledtext.ScrolledText(window, width = 100, height = 15)
+scrolled_text.pack()
+```
+
+## Frames and Parenting
+So far for our programming and using widgets we have used in window as the mastered but in most cases this isn't what you want. What you should do is have a menu item and have that said as your master. A tad entry should have a tab which is as the master. And for complex layouts you also create a container widget to organize your widgets. Here we're going to learn about French and implementing widgets inside them and using parenting as the placement for these frames to create a more detailed window.
+
+And in our case we are going to be using `ttk.Frame` Which is just an empty widget and then he will place your widgets inside of it. our main focus is to learn how parenting works. 
+
+Here to show you how a frame is going to interact with the window we're going to comment out the window geometry size and when you run the frame without a width or height you will see that there is just the window controls and nothing else. Because as stated before there is no elements to a frame it is completely empty. But you can set the size of the frame which will create the size of the window in our case easing the width and height.
+```python
+import tkinter as tk
+from tkinter import ttk
+
+#Window
+window = tk.Tk()
+window.title('Frames and parenting')
+#window.geometry('600x400')
+
+#Frame
+frame = ttk.Frame(window, width=100, height=200)
+frame.pack()
+
+#run
+window.mainloop()
+```
+
+Here in our case we're going to try to visually show what the border looks like with the geometry window if you put back the 600 and 400 and then add a border with a relief you can see that there is an outline of the frame. You don't have to set it to RIDGE, you can also set it as:
+- RIDGE - with a border
+- SUNKEN
+- FLAT - This is default 
+- RAISED
+- GROOVE
+```python
+#Frame
+frame = ttk.Frame(window, 
+				  width=100, 
+				  height=200, 
+				  borderwith = 10, 
+				  relief = tk.RIDGE)
+frame.pack()
+```
+
+In our case one or implementing a new label within the frame we're going to go ahead and use the master as the frame instead of the window. In this case you'll see that the label is inputted inside the frame but the frame even though originally was set to a height of 100 and 200 is a different size and borders the label. This is because frames Tend to auto adjust to the size that the children are inside. So therefore the child widget in this case is a label and a label is only a specific size so the frame is automatically going to adjust to this.
+> [!info]
+> If you wanted to disable this and allow it to actually stay the original size stated you need to use `frame.pack_propagate(False)`. Wear true sets size of the frame to the widget and False leaves it to what it was set at.
+
+```python
+#Frame
+frame = ttk.Frame(window, 
+				  width=100, 
+				  height=200, 
+				  borderwith = 10, 
+				  relief = tk.GROOVE)
+frame.pack()
+
+#master setting
+label = ttk.Label(frame, text= "label in frame")
+label.pack()
+```
+
+In addition you can go ahead and plug multiple items into the frame like you can do with a window. Just like how it was discussed previously with implementing widgets within a window there is an order to operations. But the order of operations will be changed since this will be its own group. Here we'll have all of these items within the frame be displayed label that button.
+```python
+#Frame
+frame = ttk.Frame(window, 
+				  width=100, 
+				  height=200, 
+				  borderwith = 10, 
+				  relief = tk.GROOVE)
+frame.pack()
+
+#master setting
+label = ttk.Label(frame, text= "label in frame")
+label.pack()
+
+button = ttk.Button(frame, text='button within a frame')
+button.pack()
+```
+
+In the event though that we have other items outside of the frame we're going to be packing it differently and depending on when that widget is packed the items can be displayed differently. Here displayed in the packing order you can see that the frame is packed first into the window and then the 2 items are packed within the frame and then outside the frame he button is packed. This will display a label and button within the frame and then outside the frame will be displayed a button. When following option two we will find that the items will be packed within the frame first the button will be displayed outside the frame and then the frame will be displayed with the 2 widgets inside of it. So think about it as the widgets that get packed into a frame are part of a group and packing them at that point packs all those items within that point.
+
+```python
+#option 1
+frame.pack() window
+button.pack() frame
+label.pack() frame
+
+button.pack() window
+
+#option 2
+button.pack() frame
+label.pack() frame
+
+button.pack() window
+frame.pack() window
+```
+
+In addition to placement within going from top to bottom you can also place widgets to the side. In our case we're going to place the widgets to the left for the frame is placed first and then the button is placed next to it. With the following packing below the frame will go all the way to the left then the button then there will be a space gap on the window. 
+```python
+frame.pack(side = left)
+button.pack(side = left)
+```
+
+## Tabs
+Tats are quite easy and they are implemented using `ttk.Notebook()`. Notebook has a couple of children which are also noted as frames and each frame is one tab. Implementing this tab structure is quite simple and in the first case you're just adding a notebook variable to the window. Implementing each tab you're going to use the frame widget for both or each tab. To add the tabs into the notebook as an actual item you need to `notebook.add()` Each tab frame into the notebook in order to create a tab don't forget to name them.
+> [!info]
+> The frames for the notebook you do not need to pack. In addition you do not need to set the frames master to the notebook it can be still sent a window. Just makes much more sense to use the notebook as the parent.
+
+
+```python
+import tkinter as tk
+from tkinter import ttk
+
+#Window
+window = tk.Tk()
+window.title('Tabs Widget')
+#window.geometry('600x400')
+
+#Notebooks
+notebook = ttk.Notebook(window)
+
+tab1 = ttk.Frame(notebook)
+
+tab2 = ttk.Frame(notebook)
+
+notebook.add(tab1 , text = 'tab 1')
+notebook.add(tab2 , text = 'tab 2')
+notebook.pack()
+
+#run
+window.mainloop()
+```
+
+Now if you remember the discussion in setting up frames within a window you know that there needs to be the master that is set to either the frame tab or window. In that case when it is added in it changes the order of operations of when it will be displayed on to the window. In this case when you're creating new widgets for each tab you align them to the frames that you made for each tab not to the notebook itself. So for example if you wanted to create a label and a button within the first frame you need to create that and set its master to the 1st frame which in this case is labeled `tab1`.
+```python
+import tkinter as tk
+from tkinter import ttk
+
+#Window
+window = tk.Tk()
+window.title('Tabs Widget')
+#window.geometry('600x400')
+
+#Notebooks
+notebook = ttk.Notebook(window)
+
+tab1 = ttk.Frame(notebook)
+label1 =ttk.Label(tab1, text = 'Text in tab 1')
+button1 = ttk.Button(tab1, text = 'button in tab 1')
+label1.pack()
+button1.pack()
+
+tab2 = ttk.Frame(notebook)
+label2 = ttk.Label(tab2, text = 'label in tab 2')
+label2.pack()
+entry2 = ttk.Entry(tab2)
+entry2.pack()
+
+notebook.add(tab1 , text = 'tab 1')
+notebook.add(tab2 , text = 'tab 2')
+notebook.pack()
+
+#run
+window.mainloop()
+```
+
+## Menus
+You create a menu using `tk.Menu()`. One complex thing you learn about menus is that you use several of them and you nest them a lot. This can cause some confusion. For example if you place ATK menu inside of another TK menu it becomes an option. 
+![[Pasted image 20240730155511.png]]
