@@ -1189,5 +1189,71 @@ window.mainloop()
 ```
 
 ## Menus
-You create a menu using `tk.Menu()`. One complex thing you learn about menus is that you use several of them and you nest them a lot. This can cause some confusion. For example if you place ATK menu inside of another TK menu it becomes an option. 
+You create a menu using `tk.Menu()`. One complex thing you learn about menus is that you use several of them and you nest them a lot. This can cause some confusion. For example if you place ATK menu inside of another TK menu it becomes an option. If we did this and we put the tk menu at the top of the window and then put another menu inside of it it would become its own option piece and then one interacted with it would display other options to be used like the image below. Similar to the top row of a Windows file or you're trying to find file edit section view go run terminal and help all those are little items or options within your menu at the top of the window. 
+
 ![[Pasted image 20240730155511.png]]
+
+Adding menus acts as a different type and widgets and it's slightly different than what you're used to. In this case we're still going to start with importing TK and TTK and we're going to build our window. Though when you introduce a menu you're going to name a variable and call it characteristics to menu and set that master to the window. Now one year starting to create the window with a venue you then have to use `window.configure(menu = menu)` Saying that you're going to configure the  Menu inside of the window. Then if you're to create sub menus you're going to head and create a new variable mimic the same steps with menu implementation but in this case in order to add that menu to your regular menu you use `menu.add_cascade(label = 'file', menu = file_menu)`. Dictating that you're having a new menu type called file menu to your menu window. This is different than using the pack method. Uniquely if you're wanting to add commands to that menu you need to use the `file_menu.add_command()` Which will help give you a new command to give to that menu item. **This is the most confusing part about menus and if you can get this you're good.** To learn more about the entries of menus visit [tutorialspoint](https://www.tutorialspoint.com/python/tk_menu.htm). 
+> [!attention]
+> to prevent a new window forming you need to set the argument `tearoff =False`
+
+
+```python
+import tkinter as tk
+from tkinter import ttk
+
+# window
+window = tk.Tk()
+window.geometry('600x400')
+window.title('Menu')
+
+#Menu
+menu=tk.Menu(window)
+
+
+#sub Menu
+file_menu = tk.Menu(menu, tearoff = False)
+file_menu.add_command(label = 'New', command = lambda: print('New File'))
+menu.add_cascade(label = "file", menu = file_menu)
+
+window.configure(menu = menu)
+
+window.mainloop()
+```
+
+Though this tutorials for [[tkinter additional methods for menu]] will be on a different time. 
+
+Just like regular widgets you can add different types of unique widgets into menu buttons. One could be a check button in the event of your help case and when initiated will check off the button and giving you different characteristics. In our case we're setting the value on or off and then setting it equal to a health check string for your variable that could be used at a later time.
+```python
+import tkinter as tk
+from tkinter import ttk
+
+# window
+window = tk.Tk()
+window.geometry('600x400')
+window.title('Menu')
+
+#Menu
+menu=tk.Menu(window)
+
+
+#sub Menu
+file_menu = tk.Menu(menu, tearoff = False)
+file_menu.add_command(label = 'New', command = lambda: print('New File'))
+file_menu.add_command(label = 'Open', command = lambda: print('Open File'))
+menu.add_cascade(label = "file", menu = file_menu)
+
+# another sub menu
+help_menu = tk.Menu(menu, tearoff = False)
+help_menu.add_command(label = 'Help entry', command = lambda: print(help_check_string.get()))
+
+help_check_string = tk.StringVar()
+help_menu.add_checkbutton(label = 'check', onvalue = 'on', offvalue = 'off', variable = help_check_string)  
+
+menu.add_cascade(label = 'Help', menu = help_menu)
+
+window.configure(menu = menu)
+
+window.mainloop()
+```
+
