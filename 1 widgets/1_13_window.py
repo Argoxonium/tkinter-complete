@@ -5,7 +5,7 @@ from tkinter import ttk
 window = tk.Tk()
 window.title('More on the window')
 # window.geometry('600x400+100+200')
-window.iconbitmap('python.ico')
+window.iconbitmap(r'C:\Users\nhorn\Documents\GitHub\tkinter-complete\1 widgets\python.ico')
 
 # exercise:
 # start window in the middle of the screen 
@@ -39,9 +39,9 @@ window.bind('<Escape>', lambda event: window.quit())
 
 
 # title bar 
-window.overrideredirect(True)
-grip = ttk.Sizegrip(window)
-grip.place(relx = 1.0, rely = 1.0, anchor = 'se')
+#window.overrideredirect(True)
+#grip = ttk.Sizegrip(window)
+#grip.place(relx = 1.0, rely = 1.0, anchor = 'se')
 
 # run
 window.mainloop()

@@ -58,7 +58,7 @@ window.mainloop()
 
 Title refers to the nameage of the window on the top bar that will show up. Geometry refers to the size of the window in pixel length. Here you can see that it's going to be 100 by 500 in the numbers are separated by an X.
 
-## Widgets
+# Widgets
 Calling a widget can be simple first you start out by calling it through `TK` and then the widget that you want to call. Then inside the widget you need to assign what window you're going to be placing the widget on. For example if you're going to create a widget that is a text box and you're going to be placing it on your main window you need to have it set to your window. To do this inside of your method you're going to be setting the master equal to the area or window that you want later on this will give more complicated but for now we are going to set it to the window.
 
 ```python
@@ -1256,4 +1256,89 @@ window.configure(menu = menu)
 
 window.mainloop()
 ```
+
+## Changning the Window
+So far we have changed the title, size of the window but there are many other things you can change in a window. 
+Something unique in basic that you can do with the geometry method is a point where the window is going to be on the screen. Case we can go ahead and move it by pixel length and have it so that the program doesn't start in the same position or the same windows starts in the same position every time. Despite adding pixel length to your geometry method.
+```python
+import tkinter as tk
+from tkinter import ttk
+
+#window
+window = tk.Tk()
+window.title('More on the window')
+window.geometry('400x600+100+200')
+
+#run
+window.mainloop()
+```
+
+Another thing you can change is the tkinter logo with a ICO file type. Once you have your ICO file you can implement it using `window.icobitmap()`.
+
+```python
+import tkinter as tk
+from tkinter import ttk
+
+#window
+window = tk.Tk()
+window.title('More on the window')
+window.geometry('400x600+100+200')
+window.icobitmap('python.ico')
+
+...
+
+#run
+window.mainloop()
+```
+
+If needed you can also set the screen attributes so that it has a minimum and maximum size as well as which resizable direction you will allow the user to have. In this case we will show a mint size and a max size of the window and then allow resizing in the vertical direction.
+```python
+#window attribures
+window.minsize(200,100)
+window.maxsize(800,700)
+window.resizable(True,False)
+```
+
+One additional things that would be extremely useful to know is to determine the size of a screen do the puzzling. In this case you can display using tkinter what the size of your window links are using the Winfo screen width and height method.
+```python
+print(window.winfo_screenwidth())
+print(window.winfo_screenheight())
+```
+
+In addition you can set the attributes of the window so that you can have transparency which can be done through the alpha, one and the adjusting the one down to point one and above will adjust the transparency. Whereas adding an attribute of topmost and setting it to true will always have the windows stay on the top.
+```python
+#window attributes
+window.attributes('-alpha', 1)
+window.attributes('-topmost',True)
+```
+
+Sometimes these functions or pieces can add some complications and you might want to add in some binding events so that you can exit the window when needed in this case sending the escape button to exit. Then if you set the attribute to disabled you're not going to be able to interact with the window. Addition you won't be able to exit the program either in this case setting a bind event to the escape button where you quit the program allows you to still quit the program.
+```python
+#security event
+window.bind('<Escape>', lambda event: window.quit())
+window.attributes('-disable',True)
+```
+
+Another I've been setting a program to a bind event to exit is having the full screen attribute enabled. In order to set the full screen attribute you need to remove both the minimum and maximum sizes of a window. So in this case you will go full screen but not able to exit the window and in this case you can press exit through escape key.
+```python
+window.attributes('-fullscreen', True)
+```
+
+At the event you want it to be more creative but remove the title bar you can use the override redirect and set it to true so that that way the title bar is removed in addition you can set the size of the window now by using the grip and then using grip place you can anchor in the window adjuster into the southeast corner.
+```python
+# title bar
+window.overrideredirect(True)
+grip = ttk.Sizegrip(window)
+grip.place(relx = 1.0, rely = 1.0, anchor = 'se')
+```
+
+# Layouts
+Unfortunately layouts can be one of the hardest things to learn in Tkinter due to the proper sizing and placement of certain items. In this case with TK enter you have three different methods you can use:
+- `pack()` - widget go from top to bottom  and stack from left to right. Simplest method to use
+- `grid()` - Such a grid onto your window which you can adjust the size of the columns and rows in places your item within the specific grid frame.
+- `place()` - simplest method and more flexibility than `pack()`
+Though it is not like you're going to just use one of these methods throughout your program it is mostly possible that you're going to use all 3. What if key to every program is parenting and frames! That way you can combine different layouts easily and keep them organized. For example if we take a new window and we want to have two different sections we're going to pack that in then our left section will be a grid based with maybe different sliders and our right section will have placed different widgets within it and on some occasions you can place your widget on top of a grid.
+![[Pasted image 20240801120923.png]]
+
+
 
