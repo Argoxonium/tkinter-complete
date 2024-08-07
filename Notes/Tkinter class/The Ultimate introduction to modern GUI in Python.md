@@ -1487,3 +1487,162 @@ button.pack(side = 'top', expand = True, fill = None)
 ```
 
 ![[Pasted image 20240806210143.png]]
+
+### Creating Space inside and outside the widget
+In addition to placement your pack method can also create space within and outside of the widget. Say that you want to have space around your widget at all types you could use `padx or pady` Arguments within the PAC method to dictate the amount of space while `ipadx and ipady` Expand your method and create more space without expanding the material inside the widget.
+![[Pasted image 20240806210808.png]]
+
+```python
+label1.pack(side = 'top', expand = True, fill = 'both', padx = 10, pady = 10)
+```
+
+### combining different sides
+You can also combine different sides. Then the order of the pack can really matter. Usually it is cleaner to use frames to organize a more complex layout. 
+```python
+# layout
+label1.pack(side = 'top', expand = True, fill = 'both')
+label2.pack(side = 'left', expand = True, fill = 'both')
+label3.pack(side = 'top', expand = True, fill = 'both')
+button.pack(side = 'top', expand = True, fill = 'both')
+```
+
+Say that we wanted to cycle over each widget that we have out of the 4 to help determine what kind of cause moving from the left or top would do to a window. If we set the first widget to left instead of top like the rest of them we find that it's going to take up as much horizontal space as it can using the expand argument. It knows that it needs to leave enough room for the rest of the widgets where in this case widget 3 takes up the most space because of its text in the horizontal position. Therefore, it needs to leave that much space left on the horizontal axis but it can take up the rest that it needs. Leaving that small amount of space to divide up between the rest of the widgets.
+Can see that this trends for the rest of the widgets as you change where left instead of top is for the side. The only change that occurs is how much top space it is allowed to have because of its positioning. The reason why it looks like there's no difference for the button is since it is packed and last there is nothing to split with it therefore it will get all the space it needs.
+
+| label1                               | label2                               | label3                               | button                               |
+| ------------------------------------ | ------------------------------------ | ------------------------------------ | ------------------------------------ |
+| ![[Pasted image 20240806211510.png]] | ![[Pasted image 20240806211514.png]] | ![[Pasted image 20240806211536.png]] | ![[Pasted image 20240806211542.png]] |
+## pack + frames
+
+Pack had become much easier to use when you combine it with frames. You always create layouts in a single direction but some items are frames that contain their own layout. but some items are frames that contain their own layout.
+![[Pasted image 20240807132315.png]]
+
+Here we can see we have our basic window and 6 widgets. With the additions of these widgets we are wanting to add more comments to help determine what is where. 
+```python
+import tkinter as tk
+from tkinter import ttk
+
+# window
+window = tk.Tk()
+window.title('Pack parenting')
+window.geometry('400x600')
+
+#widgets
+label1 = ttk.Label(top_frame, text = 'First label', background = 'red')
+label2 = ttk.Label(top_frame, text = 'Label 2', background = 'blue')
+label3 = ttk.Label(window, text = 'Another label', background = 'green')
+label4 = ttk.Label(bottom_frame, text = 'Last of the labels', background = 'orange')
+button = ttk.Button(bottom_frame, text = 'A Button')
+button2 = ttk.Button(bottom_frame, text = 'Another Button')
+```
+
+To organize these we need to create the first frame that we can pack into. when packing we have to remember to pack the frame. But you need to remember that filling not only needs to happen with widgets but frames as well. Which will limit the fame to the required widget size. 
+
+| No fill                              | Fill Widgets                         | Fill widgets and Frame               |
+| ------------------------------------ | ------------------------------------ | ------------------------------------ |
+| ![[Pasted image 20240807135247.png]] | ![[Pasted image 20240807135337.png]] | ![[Pasted image 20240807135316.png]] |
+
+```python
+top_frame = ttk.Frame(window)
+label1 = ttk.Label(top_frame, text = 'First label', background = 'red')
+label2 = ttk.Label(top_frame, text = 'Label 2', background = 'blue')
+label1.pack(fill = both)
+label2.pack(fill = both)
+top_frame.pack(fill = both)
+
+```
+In turn if we expand the widgets so that they extend from top to bottom nothing will change. This is because the frame needs to be expanded as well. 
+```python
+label1.pack(fill = both, expand = True)
+label2.pack(fill = both, expand = True)
+top_frame.pack(fill = both, expand = True)
+```
+![[Pasted image 20240807135643.png]]
+
+Now that we understand how the frame is going to work within the widget that how it needs to share similar characteristics with widgets in order to properly consume the window we can add the third label. In our case we want to add in the label but not change any of its characteristics but show that there is space around the label. This means that what we pack the label into the window it needs to have an expand argument set to true.
+```python
+import tkinter as tk
+from tkinter import ttk
+
+# window
+window = tk.Tk()
+window.title('Pack parenting')
+window.geometry('400x600')
+
+#widgets
+label1 = ttk.Label(top_frame, text = 'First label', background = 'red')
+label2 = ttk.Label(top_frame, text = 'Label 2', background = 'blue')
+label3 = ttk.Label(window, text = 'Another label', background = 'green')
+label4 = ttk.Label(bottom_frame, text = 'Last of the labels', background = 'orange')
+button = ttk.Button(bottom_frame, text = 'A Button')
+button2 = ttk.Button(bottom_frame, text = 'Another Button')
+
+#top layout pack
+label1.pack(fill = both, expand = True)
+label2.pack(fill = both, expand = True)
+top_frame.pack(fill = both, expand = True)
+
+#middle layout pack
+label3.pack(expand = True)
+
+```
+
+When we do this we find that the widgets are not divided evenly throughout the window and the label three consumes the most horizontal space. The reason for this is because the frame and the 3rd widget are going to share the horizontal space between each other. Then within the frame widget itself the first and second label with share its horizontal space between themselves.
+![[Pasted image 20240807140034.png]]
+
+Then trying to plead our layout from our example we are going to add in the bottom layer and we want to add buttons in a row within its bottom frame pack. In this case we'll make a new variable called bottom frame that is equal to the frames in TTK. Then we'll add the buttons and pack them into the frame. But we want the buttons and the label to expand within the horizontal direction and fill up the entire frame. Using expand is not going to give us the desired output since placing the buttons and label from left to right is only going to expand it from left to right.
+```python
+import tkinter as tk
+from tkinter import ttk
+
+# window
+window = tk.Tk()
+window.title('Pack parenting')
+window.geometry('400x600')
+
+  
+#frame creation
+top_frame = ttk.Frame()
+bottom_frame = ttk.Frame()
+
+#widgets
+label1 = ttk.Label(top_frame, text = 'First label', background = 'red')
+label2 = ttk.Label(top_frame, text = 'Label 2', background = 'blue')
+label3 = ttk.Label(window, text = 'Another label', background = 'green')
+label4 = ttk.Label(bottom_frame, text = 'Last of the labels', background = 'orange')
+button = ttk.Button(bottom_frame, text = 'A Button')
+button2 = ttk.Button(bottom_frame, text = 'Another Button')
+
+#top layout pack
+label1.pack(side = "left", fill = 'both', expand = True)
+label2.pack(side = "left", fill = 'both', expand = True)
+top_frame.pack(fill = 'both', expand = True)
+
+#middle layout pack
+label3.pack(expand = True)
+
+#bottom layout pack
+button.pack(side = 'left', expand = True)
+label4.pack(side = 'left', expand = True)
+button2.pack(side = 'left', expand = True)
+bottom_frame.pack(expand = True)
+
+window.mainloop()
+
+```
+
+![[Pasted image 20240807141022.png]]
+
+This means in our case we need to use the fill command that way we can fill up the entire space available for the widgets and the frame. In addition we also want to add a little bit of padding so we'll add that with paddocks and pad Y.
+
+```python
+#bottom layout pack
+button.pack(side = 'left', expand = True, fill = "both")
+label4.pack(side = 'left', expand = True, fill = "both")
+button2.pack(side = 'left', expand = True, fill = "both")
+bottom_frame.pack(expand = True, fill = "both", padx = 20, pady = 20)
+```
+
+![[Pasted image 20240807141047.png]]
+
+## Grids

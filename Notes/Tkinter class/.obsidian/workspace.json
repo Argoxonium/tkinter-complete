@@ -143,7 +143,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -159,19 +160,18 @@
   },
   "active": "f3bfe752d40129d5",
   "lastOpenFiles": [
-    "Pasted image 20240806210143.png",
-    "Pasted image 20240806210127.png",
-    "Pasted image 20240806210123.png",
-    "Pasted image 20240806205722.png",
-    "Pasted image 20240806204043.png",
-    "Pasted image 20240806202222.png",
-    "Pasted image 20240806162151.png",
-    "Pasted image 20240806161341.png",
-    "Pasted image 20240806161158.png",
-    "Pasted image 20240806160448.png",
-    "Pasted image 20240801120923.png",
-    "Using Tkinter.md",
+    "Images/Pasted image 20240807141047.png",
     "The Ultimate introduction to modern GUI in Python.md",
+    "Images/Pasted image 20240807141022.png",
+    "Images/Pasted image 20240807140034.png",
+    "Images/Pasted image 20240807135643.png",
+    "Images/Pasted image 20240807135337.png",
+    "Images/Pasted image 20240807135316.png",
+    "Images/Pasted image 20240807135247.png",
+    "Images/Pasted image 20240807132315.png",
+    "Images/Pasted image 20240806211542.png",
+    "Images/Pasted image 20240806211536.png",
+    "Using Tkinter.md",
     "Images",
     "Welcome.md"
   ]
