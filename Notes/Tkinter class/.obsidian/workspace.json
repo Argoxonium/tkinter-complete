@@ -129,13 +129,21 @@
                 "file": "The Ultimate introduction to modern GUI in Python.md"
               }
             }
+          },
+          {
+            "id": "09ce8e9b837e6358",
+            "type": "leaf",
+            "state": {
+              "type": "advanced-tables-toolbar",
+              "state": {}
+            }
           }
-        ]
+        ],
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -151,12 +159,20 @@
   },
   "active": "f3bfe752d40129d5",
   "lastOpenFiles": [
+    "Pasted image 20240806210143.png",
+    "Pasted image 20240806210127.png",
+    "Pasted image 20240806210123.png",
+    "Pasted image 20240806205722.png",
+    "Pasted image 20240806204043.png",
+    "Pasted image 20240806202222.png",
+    "Pasted image 20240806162151.png",
+    "Pasted image 20240806161341.png",
+    "Pasted image 20240806161158.png",
+    "Pasted image 20240806160448.png",
     "Pasted image 20240801120923.png",
-    "Pasted image 20240730155511.png",
     "Using Tkinter.md",
     "The Ultimate introduction to modern GUI in Python.md",
     "Images",
-    "Images/Pasted image 20240725151042.png",
     "Welcome.md"
   ]
 }

@@ -1340,9 +1340,150 @@ Unfortunately layouts can be one of the hardest things to learn in Tkinter due t
 Though it is not like you're going to just use one of these methods throughout your program it is mostly possible that you're going to use all 3. What if key to every program is parenting and frames! That way you can combine different layouts easily and keep them organized. For example if we take a new window and we want to have two different sections we're going to pack that in then our left section will be a grid based with maybe different sliders and our right section will have placed different widgets within it and on some occasions you can place your widget on top of a grid.
 ![[Pasted image 20240801120923.png]]
 
+To revert back to the previous method that we had learned which is `pack()`. Pack places the items with in the window in a certain order and from our previous discussions you can either go from top to bottom or left or right. In our case if we wanted to move this to the left to right we would use the *side* argument within `pack()`. Another argument within pack is *expand* Which will expand the items space to its entire availability. Then you have *fill* which will *fill* the entire widget within the certain field and you can dictate which direction *fill* will happen (X, Y, or both). Here our widget will be a label.
+```python
+import tkinter as tk
+from tkinter import ttk
 
+#window
+window = tk.Tk()
+window.title('MLayout Intro')
+window.geometry('400x600')
 
-## Multiple Windows
+#widgets
+label1 = ttk.Label(window, text = 'Label 1', background = 'red')
+label2 = ttk.Label(window, text = 'Label 2', background = 'blue')
 
+#pack Option 1
+label1.pack()
+label2.pack()
 
-https://www.youtube.com/watch?v=mop6g-c5HEY
+#Pack Option 2
+label1.pack(side = 'left', expand = True, fill = 'y')
+label2.pack(side = 'right', expand = True, fill = 'both')
+
+#run
+window.mainloop()
+```
+
+one of the newer methods that we talked about is the `grid()` method. In order to use the grid method you need to set it up properly prior to placing a item within the grid. To create a grid you need to determine the number of columns and rows with the `columnconfigure()` and `rowconfigure()` methods. In this method you will have two arguments you need to have`(arg1, arg2)`. *arg1* determines what number of row or column you are creating and *arg2 = weight* is determining the size. In our case below we are going to create three columns where the first two are the same size but the 3rd one will be double the size of the first two and two rows.
+```python
+# grid
+window.columnconfigure(0, weight = 1)
+window.columnconfigure(1, weight = 1)
+window.columnconfigure(2, weight = 2)
+window.rowconfigure(0, weight = 1)
+window.rowconfigure(1, weight = 1)
+
+```
+
+If we were to create this window and have a label for each position with an identified color you would be able to identify that the grid that was created would be as follows:
+![[Pasted image 20240806161158.png]]
+
+To put our two labels within the grid frame we need to use `grid()` But specify where the widget will be placed. the first two arguments you will need is *row & column* and set them equal to the row and column you are wanting to place the widget. When doing so you will be placing the widget at its specific size within the grit so it might not take up too much space. In order to dictate how much space the widget can take up or its placement within the cell you use the argument `sticky` and use one of the 4 variables `(n s e w)`. Say you wanted to let the widget cross multiple areas like the merge function within excel, there is the `columnspan or rowspan` arguments.
+```python
+label1.grid(row = 0, column = 1, sticky = 'nsew')
+label2.grid(row = 1, column = 1, columnspan = 2, sticky = 'nsew')
+```
+He can identify how sticky would interact by creating the labels and setting him to N (0,0) S(1,0) E(0,1) and W(1,1). 
+![[Pasted image 20240806161341.png]]
+
+The place method interacts with the window by using the entire windows as a coordinate system with pixels. In this case when you're placing an item you're going to determine the X and Y arguments and where they set. This is where using the `geometry()` helps a lot since you will know the size of your window.
+> [!attention]
+> Increasing X moves the widget to the right and increasing Y moves the widget down.
+
+In addition with youth in the place method if you want to dictate the size of the widget you can use the *width & height* arguments. Keep in mind you can extend  the widget beyond the window. 
+
+You can also use a different way to place items using the place method using relative X and Y coordinates. Relative X and Y coordinates *relx & rely* treats the entire grid between zero and one so that even if the window size changes the widgets automatically adjust to the size of the window. When placing the widget, by default it will always uses the top left corner. Therefore, if you place the widget at (0,0) its top left corner is going to be placed at the top left corner of the window. But if you place the widget at (.5, .5) it will be placed in the center of the window and even when you adjust the window it will stay in the center. You can also adjust the point that you want to use for your anchoring spot within the window by using *anchor* argument. The options of corners are:
+![[Pasted image 20240806160448.png]]
+
+A better example to show how placement can be affected by the corner that you choose is to create a label for each corner and place it within the center of the window. Like so:
+![[Pasted image 20240806162151.png]]
+
+```python
+label1.place(x = 100 , y = 200, width = 200, height = 100)
+label2.place(relx = 0.5, rely = 0.5, relwidth = 1, anchor = 'se')
+```
+
+## Pack Continued
+We already know the general ability of pack and how to use it but to know how to use pack well you need to know these three arguments. 
+**side**: 'left', 'right', 'top', 'bottom' | The side the widget is added to
+**expand**: True, False | Determines the vertical or horizontal space a widget *can* occupy
+**fill**: 'X', 'Y', 'both', None | Sets how much space the widget *will* occupy
+
+To starter example we will develop a window with 3 labels and a button to use for our example as follows: 
+```python
+import tkinter as tk
+from tkinter import ttk 
+
+# window
+window = tk.Tk()
+window.title('Pack')
+window.geometry('400x600')
+
+  
+
+# widgets
+label1 = ttk.Label(window, text = 'First label', background = 'red')
+label2 = ttk.Label(window, text = 'Label 2', background = 'blue')
+label3 = ttk.Label(window, text = 'Last of the labels', background = 'green')
+button = ttk.Button(window, text = 'Button')
+
+# run
+window.mainloop()
+```
+
+Here traditionally if we're going to use the packed method to introduce each of these widgets into our window we will have them stacked in order with the minimal amount of space taken up.
+```python
+label1.pack()
+label2.pack()
+label3.pack()
+button.pack()
+```
+![[Pasted image 20240806202222.png]]
+### side
+But if we want to change location and the order that it is stacked we can use the site argument within the method to dictate which side we want the widget to show up. Though choosing different sides at the same time can result in unexpected results.
+```python
+label1.pack(side = 'bottom')
+label2.pack(side = 'bottom')
+label3.pack(side = 'bottom')
+button.pack(side = 'bottom')
+```
+
+### expand
+Expand is a trickier concept since the additions to it are dictated by what type of work you're currently doing. Expand determines how much space a widget *can* occupy. **Widgets only expand in one direction** In this direction is determined by the stacking of the objects in which direction that they're going in. 
+> [!info] 2 kinds of spaces:
+> - The space a widget *can* occupy
+> - The space a widget *will* occupy
+
+By default a widget will only be as big as the content (foe example, a label is just as bug as the text). However, the widget can occupy more space than that. by default, widgets will only occupy the space they need to display the content. But they *can* occupy more space! 
+
+| side = top or bottom                   | side = left or right                    |
+| -------------------------------------- | --------------------------------------- |
+| Widget can be as wide as the container | Widget can be as heigh as the container |
+| expand determines the height           | expand determines the width             |
+But if we put this idea into action we really need to determine how expand works. In our case we're going to set the first label and the button to expand this way we can see how much space it takes up whereas the other two labels will not. When the code is run in action you can see that the label and the button itself will try to take up as much **space** as possible whereas the other two labels are going to stay as close together as possible.
+```python
+# layout
+label1.pack(side = 'left', expand = True)
+label2.pack(side = 'left')
+label3.pack(side = 'left')
+button.pack(side = 'left', expand = True)
+```
+
+![[Pasted image 20240806204043.png]]
+
+### fill
+Phil will determine if a widget will occupy the available space unlike expand which can occupy the space. The options that you have for fill are as follows:
+![[Pasted image 20240806205722.png]]
+
+In order to see these correctly we can take the widgets and set them all to expand equal true allowing them to take up the equal amount of space between each other and fill it in each direction. You'll see that both fills up the overall area while none doesn't fill and stays limited which is the default option. Then there's X and Y which expand it to different directions.
+```python
+# layout
+label1.pack(side = 'top', expand = True, fill = 'both')
+label2.pack(side = 'top', expand = True, fill = 'x')
+label3.pack(side = 'top', expand = True, fill = 'y')
+button.pack(side = 'top', expand = True, fill = None)
+```
+
+![[Pasted image 20240806210143.png]]
