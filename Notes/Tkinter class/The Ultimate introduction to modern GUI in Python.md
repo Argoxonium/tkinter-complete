@@ -1646,3 +1646,333 @@ bottom_frame.pack(expand = True, fill = "both", padx = 20, pady = 20)
 ![[Pasted image 20240807141047.png]]
 
 ## Grids
+When using a gid methos we are setting the number of row & columns. For each row and column you can set the width and height. Then you can place widgets in a column & row. They can also occupy multiple cells and have padding. 
+> [!attention]
+> Like with pack, the grid only determines how much space a widget _can_ occupy. Sticky determines what widgets _will_ fill. 
+
+Sticky is an argument that is set through notation as follows: `sticky = 'nsew'`.  Choosing one side, for example north (n), will retain the widget size but stick it at the top of a cell. Choosing multiple sides, for example south and north (ns), will retain the widgets width but the height is the height of the cell. Using all 4 sides will set the widget the same size of the cell. 
+
+![[Pasted image 20240809103802.png]]
+
+Here we will use multiple widgets to assist us in understanding a grid method.
+```python
+import tkinter as tk
+from tkinter import ttk
+  
+# window
+window = tk.Tk()
+window.title('Grid')
+window.geometry('600x400')
+
+# widgets
+label1 = ttk.Label(window, text = 'Label 1', background = 'red')
+label2 = ttk.Label(window, text = 'Label 2', background = 'blue')
+label3 = ttk.Label(window, text = 'Label 3', background = 'green')
+label4 = ttk.Label(window, text = 'Label 4', background = 'yellow')
+button1 = ttk.Button(window, text = 'Button 1')
+button2 = ttk.Button(window, text = 'Button 2')
+entry = ttk.Entry(window)
+
+#run
+window.mainloop()
+```
+
+Though before placing the widgets onto a gid we need to define a grid. This is done with the configure method for both columns and rows using `window.columnconfigure(index, weight = spacing#)`. Here we will do 2 columns and 1 row. 
+```python
+window.columnconfigure(0, weight = 1)
+window.columnconfigure(1, weight = 1)
+window.rowconfigure(0, weight = 1)
+```
+
+The winners comes in to larger amounts of rows and columns it becomes monotonous to do this again and again. In our case we can input a tuple variable into the configure method to help iterate over the specific lines of columns and rows. 
+```python
+window.columnconfigure((0, 1, 2), weight = 1)
+window.columnconfigure(3, weight = 10)
+window.rowconfigure(0, weight = 1)
+```
+In addition it is also possible to stagger the tuple between two types of characteristics of a column or row to be initiated within the grid. In our case we can stagger it so that the columns have a weight of 1 and the other columns have a weight of 10 crisscrossing as they go.
+```python
+window.columnconfigure((0, 2, 4), weight = 1)
+window.columnconfigure(1,3, weight = 10)
+window.rowconfigure(0, weight = 1)
+```
+
+And in order to place a widget within a grid you need to specify the index number that was originally signed in the configure method. For example `widget.grid(row index, column index)`
+```python
+label1.grid(row = 0, column = 0)
+label2.grid(row = 0, column = 1)
+```
+ Printing they still see that we have two columns and one row with both the label widgets within the center of each column but it does not extend to the overall area of each cell.
+ ![[Pasted image 20240809111051.png]]
+To remove the whitespace in each cell we need the sticky argument. Place an even different directions with one sticky variable on the side that dictates the cell will help change the location of the widget. In our example we can put the widgets touching together by putting them on the same border of mine whereas the label one is going to be on the east borderline cell at level two is going to be on the West.
+```python
+label1.grid(row = 0, column = 0, sticky = 'e')
+label2.grid(row = 0, column = 1, sticky = 'w')
+```
+![[Pasted image 20240809111215.png]]
+In order to expand widget you can use multiple sides of the widget cell to help expand. In our case if we wanted to expand the widget so that it takes up the entire horizontal space you would need to put E and W within the sticky argument. But you can see that when you use NE and W it is only going to relocate the widget to the north side but expanded in the horizontal direction.
+```python
+label1.grid(row = 0, column = 0, sticky = 'new')
+label2.grid(row = 0, column = 1, sticky = 'w')
+```
+![[Pasted image 20240809111336.png]]
+But say if we wanted to have our widgets span across multiple rows or columns there is a particular argument that we can use called Span (`rowspan or columnspan`).  Span will expand the widget from its current cell to any higher number cell for example if it's in cell one it will expand all the way to cell 3 if you have a road span of three. Keep in mind that when you stand multiple widgets they will overlap each other. In our case we're going to create a widget that is going to expand itself to every side of the cell and expand it by three then overlap it with another widget to show that it can cross over each other.
+```python
+label1.grid(row = 0, column = 0, rowspan = 3, sticky = 'nsew')
+label2.grid(row = 1, column = 0, columnspan = 3, sticky = 'nsew')
+```
+
+![[Pasted image 20240809114116.png]]
+> [!info]
+> The grid method always scales with the window!
+### padding in grids
+Just like the padding within the pack video you are able to do the same for a grid and it acts in a very similar way where you have the expansion of the space around the widget or the expansion of the widget to the surrounding space. You are able to use the same arguments within the grid method when placing it which it on to the grid.
+![[Pasted image 20240809114236.png]]
+
+But do remember that expanding the widget beyond the cell dimensions will expand the cell to accommodate it. And this way you will force the other rows and columns around this cell of forced expansion to shrink. In our example we can use pad Y and expand it to 100 and it will expand the widget but it makes the first column shrink. 
+```python
+label1.grid(row = 0, column = 0, sticky = 'nsew')
+label2.grid(row = 1, column = 1, rowspan = 3, sticky = 'nsew')
+label3.grid(row = 1, column = 0, columnspan = 3, sticky = 'nsew', padx = 20, pady = 100)
+```
+
+### grids uniformity issue
+Grid can be a bit weird when you have empty cells. This can be demonstrated by having four columns and having them equal weight set to one and you have a widget and column one and a widget in column 3 that share the same size and space. Even though the widgets are separated by a column sometimes they can expand it beyond what they need to which adds some frustration. 
+![[Pasted image 20240809114850.png]]
+
+If you rather some example you can see here that even though there are three columns with the widgets overtaking it they do expand. Making the columns that have the labels in them equal but the column in between is not equal in width as the columns with the labels. 
+![[Pasted image 20240809115131.png]]
+
+This can be fixed by using the uniform argument being set in the configure method. 
+```python
+window.rowconfigure(0, weight = 1, uniform = 'a')
+```
+
+## Place
+Widgets are placed by specifying the left, top, width and height. These numbers can be absolute or relative and this method is easier than others. 
+
+| Absolute                             | relative                             |
+| ------------------------------------ | ------------------------------------ |
+| ![[Pasted image 20240813135439.png]] | ![[Pasted image 20240813135608.png]] |
+
+To first review the absolute positioning and using place you'll have to see that there are four different arguments. The X and Y arguments dictate the location of the upper left corner and where it will be placed due to the pixel length within the window. Width and height are going to dictate the size of the widget and what it's allowed to consume for space. **keep in mind** that the absolute placement method will fixate the widget to the window. Therefore, when the window is resized it will not adjust to the window. 
+```python
+import tkinter as tk
+from tkinter import ttk  
+
+# window
+window = tk.Tk()
+window.title('Place')
+window.geometry('400x600')
+
+# widgets
+label1 = ttk.Label(window, text = 'Label 1', background = 'red')
+label2 = ttk.Label(window, text = 'Label 2', background = 'blue')
+label3 = ttk.Label(window, text = 'Label 3', background = 'green')
+button = ttk.Button(window, text = 'Button')
+
+#layout
+label1.place(x= 100,y=200, width = 300, height = 50)
+
+#run
+window.mainloop()
+```
+
+When implanting the relative method you have `rel` But in front of all four arguments when wanting to use the relative position. On the relative positioning is used it will adjust to the window frame size.
+```python
+
+label2.place(relx = 0.2, rely = 0.1, relwidth = 0.4, relheight = 0.5)
+
+```
+
+## Widget Sizes
+Which its sizes can be somewhat complicated since there is multiple places you can adjust the size of a widget.. The first place is doing it within the widget method itself and the second is through one of the three layout methods, and these methods are not the same. Take for instance:
+
+`ttk.Label(parent, text='label',width = 50).pack(fill)`
+
+The two ways to adjust the size of the widget will be the width argument and the fill argument in the two different methods. Within label widget it is slightly confusing because the width method is not the width of _50 pixels_ but the width of _50 characters_.
+
+> [!important]
+> If you implement the size arguments within either of the methods for which it's or layouts by priority the layout method will take charge of the size of the widget.
+
+> [!danger]
+> Not paying attention to where you adjust the size of a widget will give you errors & bugs
+
+
+## Stacking Order
+Stagging order is important because witches are always placed on the top of other widgets when they are created **not when they're placed**. Therefore the creation of the widget is much more important than the placement of the widget. You can raise the widget to be on top of all widgets or another widget if necessary.
+Here we'll start with a more complex code That allows for the inflammation of two labels and two buttons that are tied together. Note of how the code is set in order but if you swap the placement of either the buttons or the labels they will all still show up in the same order and overlap. In order to change this you need to change the order of creation of the widget.
+```python
+import tkinter as tk
+from tkinter import ttk
+
+
+# window
+window = tk.Tk()
+window.title('Stacking order')
+window.geometry('400x400')
+  
+
+# widgets
+label1 = ttk.Label(window, text = 'Label 1', background = 'green')
+label2 = ttk.Label(window, text = 'Label 2', background = 'red')
+
+# label1.lift()
+# label2.lower()
+
+button1 = ttk.Button(window, text = 'raise label 1')
+button2 = ttk.Button(window, text = 'raise label 2')
+
+
+# layout
+
+label1.place(x = 50, y = 100, width = 200, height = 150)
+label2.place(x = 150, y = 60, width = 140, height = 100)
+
+
+button1.place(rely = 1, relx = 0.8, anchor = 'se')
+button2.place(rely = 1, relx = 1, anchor = 'se')
+
+  
+
+# run
+
+window.mainloop()
+```
+
+Though TKinter does give us some tools to lift and lower widgets within their stacking order. Not only do we have the ability to call these methods but we can implement these methods within our lambda functions inside of a button.
+
+> [!info]
+> There seems to be no difference between tkraise and lift.
+
+```python
+label1.lift() or label1.tkraise()
+label2.lower()
+
+button1 = ttk.Button(window, text = 'raise label 1', command = lambda: label1.lift())
+```
+
+## Toggling Widgets
+The thing to remember is that you don't really hide slashed reveal widgets instead you remove and add widgets to the layout. An example is using the pack method where `.pack()` to place a widget and `.pack_forget()` to remove a widget.
+
+```python
+import tkinter as tk
+from tkinter import ttk
+
+# setup
+window = tk.Tk()
+window.geometry('600x400')
+window.title('Hide widgets')
+
+#place
+def toggle_label_place():
+	label.place_forget()
+
+label = ttk.Label(window, text= 'A label')
+label.place(relx = 0.5, rely = 0.5, anchor = 'center')
+
+button = ttk.Button(window, text = 'toggle Label', command = toggle_label_pack)
+button.place(x = 10, y = 10)
+
+window.mainloop()
+```
+
+Though if we wanted it to be able to toggle its appearance within the window we would need to create a new function whenever the button is pressed to toggle whether it label as visible or not. In our case we're going to first start with a global variable called`label_visible`. This is going to help us detect whether the label is currently visible or not. Then we are going to build a new function called `toggle_label_place()` And this is going to import the global variable End depending on whether the variable is currently true or not we'll place the widget or remove it.   
+```python
+#place
+def toggle_label_place():
+	global label_visible
+	if label_visible:
+		label.place_forget()
+		label_visible = False
+	else:
+		label_visible = True
+		label.place(relx = 0.5, rely = 0.5, anchor = 'center')
+
+label_visible = True #true by default
+label = ttk.Label(window, text= 'A label')
+label.place(relx = 0.5, rely = 0.5, anchor = 'center')
+
+button = ttk.Button(window, text = 'toggle Label', command = toggle_label_pack)
+button.place(x = 10, y = 10)
+```
+This can be used for all three of the layout methods as long as you put `_forget()` After the placement method. Just ensure that when you're in putting the widget you're calling the theme method type that you are with the layout type that you've developed and that you set up the layout correctly. 
+
+## Combining different layouts
+Here we are going to create a new window program using Place, Pack and Grid to form the layout. To create this layout we are going to use have to frames, left and right of each other. Within the left frame we will use the grid method and at the bottom a frame with two check boxes and entry widget. Within the right frame we are using the pack method that has two additional frames. 
+![[Pasted image 20240814144705.png]]
+
+First we need to set up our main frames that are going to dictate the layout of our window. Like stated before we are going to use two frames one on the left and one on the right. Not only do we want to create these frames but we also want to set the minimum size of the window as well and we're going to have the frame be attached relatively to the exposition for one of the frames. For her example we're going to create two labels to fill up the area to show how these frames are going to be consuming the layout of the window.
+```python
+import tkinter as tk
+from tkinter import ttk
+
+# window
+window = tk.Tk()
+window.title('Combined layout')
+window.geometry('600x600')
+window.minsize(600,600)
+
+#main layout widgets
+#these are the widgets/frames that will contain everything else.
+menu_frame = ttk.Frame(window)
+main_frame = ttk.Frame(window)
+
+#Place the main layout
+menu_frame.place(x = 0, y = 0, relwidth = 0.3. relheight = 1)
+main_frame.place(relx = 0.3, y = 0, relwidth = 0.7, relheight = 1)
+
+#label examples
+menu_frame.place(x = 0, y = 0, relwidth = 0.3, relheight = 1)
+main_frame.place(relx = 0.3, y = 0, relwidth = 0.7, relheight = 1)
+
+#run
+window.mainloop()
+```
+
+To save time these are the additional widgets that we are going to put into the first frame on the left, also known as the Menu frame.
+```python
+# menu widgets
+menu_button1 = ttk.Button(menu_frame, text = 'Button 1')
+menu_button2 = ttk.Button(menu_frame, text = 'Button 2')
+menu_button3 = ttk.Button(menu_frame, text = 'Button 3')
+
+menu_slider1 = ttk.Scale(menu_frame, orient = 'vertical')
+menu_slider2 = ttk.Scale(menu_frame, orient = 'vertical')
+ 
+
+toggle_frame = ttk.Frame(menu_frame)
+menu_toggle1 = ttk.Checkbutton(toggle_frame, text = 'check 1')
+menu_toggle2 = ttk.Checkbutton(toggle_frame, text = 'check 2')
+
+entry = ttk.Entry(menu_frame)
+```
+
+Using lessons we learned from [[#Grids]] we create the first set of buttons layout. 
+```python
+# menu layout
+menu_frame.columnconfigure((0,1,2), weight = 1, uniform = 'a')
+menu_frame.rowconfigure((0,1,2,3,4), weight = 1, uniform = 'a')
+
+menu_button1.grid(row = 0, column = 0, sticky = 'nswe', columnspan = 2, padx = 4, pady = 4)
+menu_button2.grid(row = 0, column = 2, sticky = 'nswe', padx = 4, pady = 4)
+menu_button3.grid(row = 1, column = 0, columnspan = 3, sticky = 'nsew', padx = 4, pady = 4)
+
+menu_slider1.grid(row = 2, column = 0, rowspan = 2, sticky = 'nsew', pady = 20)
+menu_slider2.grid(row = 2, column = 2, rowspan = 2, sticky = 'nsew', pady = 20)
+```
+
+Then we want to create a new frame at the bottom of the grid to add the checkboxes and one entry widget. But the tricky part for the Entry widget we want to place the widget at its center so its centered it. Though there are different methods you can try. 
+> [!danger]
+> you cannot use the pack method once you used the grid method. 
+
+
+```python
+# toggle layout
+toggle_frame.grid(row = 4, column = 0, columnspan = 3, sticky = 'nsew')
+menu_toggle1.pack(side = 'left', expand = True)
+menu_toggle2.pack(side = 'left', expand = True)
+
+# entry layout
+entry.place(relx = 0.5, rely = 0.95, relwidth = 0.9, anchor = 'center')
+```
