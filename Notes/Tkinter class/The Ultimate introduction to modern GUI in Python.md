@@ -1964,8 +1964,7 @@ menu_slider2.grid(row = 2, column = 2, rowspan = 2, sticky = 'nsew', pady = 20)
 
 Then we want to create a new frame at the bottom of the grid to add the checkboxes and one entry widget. But the tricky part for the Entry widget we want to place the widget at its center so its centered it. Though there are different methods you can try. 
 > [!danger]
-> you cannot use the pack method once you used the grid method. 
-
+> you cannot use the pack method once you used the grid method. Therefore use the **place** method.
 
 ```python
 # toggle layout
@@ -1976,3 +1975,222 @@ menu_toggle2.pack(side = 'left', expand = True)
 # entry layout
 entry.place(relx = 0.5, rely = 0.95, relwidth = 0.9, anchor = 'center')
 ```
+
+The rest of the layout will be simple since for the main frame. Here we are going to not only create widgets, but applying spaces for visual appeal. 
+```python
+# main layout
+entry_frame1.pack(side = 'left', expand = True, fill = 'both', padx = 20, pady = 20)
+entry_frame2.pack(side = 'left', expand = True, fill = 'both', padx = 20, pady = 20)
+  
+main_label1.pack(expand = True, fill = 'both')
+main_button1.pack(expand = True, fill = 'both', pady = 10)
+
+main_label2.pack(expand = True, fill = 'both')
+main_button2.pack(expand = True, fill = 'both', pady = 10)
+```
+
+## Using Classes
+for us we are going to create the same window we did before but transform the code to use classes for easy use. The key idea you have to remember is we take widgets usually a frame via inheritance an add widgets to our windows. Using classes allows us to organize lots of widgets quite easily. 
+
+To first start off we're going to create our window using a class. To import tkinter and ttk it is the same. Typically when we build our window we do the following:
+```python
+# window
+window = tk.Tk()
+window.title('Combined layout')
+window.geometry('600x600')
+window.minsize(600,600)
+
+window.mainloop()
+```
+Instead of doing the typical method of what we are going to do is create a class that is the window it is handling `tk.Tk()` through inheritance instead of storing it as a variable. So first we're going to focus on the first line where we typically set tk to window. In our case we are going to inherit TK within our class application create the basic function of an innit calling shelf in ensure that it's working correctly we are going to call super. 
+> [!info]
+> Python being an object oriented language provides a built in function called [Super](https://www.geeksforgeeks.org/python-super-with-__init__-method/). This allows a child class to refer to its parent class in our case we were referring to the class TK. When it comes to initializing instances of classes the innate method is often used. Combining super within it can be particularly useful when you want to extend the behavior of parent class's constructor while maintaining its functionality.
+
+In turn we have basically created the following code to replace `window = tk.Tk()` but with more power. 
+```python
+import tkinter as tk
+from tkinter import ttk
+
+Class App(tk.Tk)
+	def __init__(self):
+		super().__init__()
+```
+
+to create the additional items we are going to refer to `self` and use the methos provided from tk.
+```python
+import tkinter as tk
+from tkinter import ttk
+
+Class App(tk.Tk)
+	def __init__(self):
+		super().__init__()
+		
+		#window details
+		self.title('Class based app')
+		self.geometry('600x600')
+		self.minsize(600,600)
+		
+		#run loop
+		self.mainloop()
+
+App()
+```
+
+Even though this method is good and what we need what if we wanted to pass our arguments through the class so that they're not dictated or fixed. This means that we can edit the class in real time just by its point that's initiated within the main function loop. Knowing classes, you can add your edited variables within the `__init__` function itself. Our implementation is going to put in a string and then a tuple that we will have to use. Currently there would be no difference but when you call the application itself and you want to have an ease of change this will be much easier.
+```python
+import tkinter as tk
+from tkinter import ttk
+
+Class App(tk.Tk)
+	def __init__(self, title, size):
+		super().__init__()
+		
+		#window details
+		self.title(title)
+		self.geometry(f'{size[0]}x{size[1]}')
+		self.minsize(size[0],size[1])
+		
+		#run loop
+		self.mainloop()
+
+App('Class based app', (600,600))
+```
+
+now we are going to create the `menu_frame` were we are going to create the frame, place it and then create the widgets. Previously we did:
+```python
+# main layout widgets
+menu_frame = ttk.Frame(window)
+main_frame = ttk.Frame(window)
+
+# main place layout
+menu_frame.place(x = 0, y = 0, relwidth = 0.3, relheight = 1)
+main_frame.place(relx = 0.3, y = 0, relwidth = 0.7, relheight = 1)
+
+# menu widgets
+menu_button1 = ttk.Button(menu_frame, text = 'Button 1')
+menu_button2 = ttk.Button(menu_frame, text = 'Button 2')
+menu_button3 = ttk.Button(menu_frame, text = 'Button 3')
+  
+menu_slider1 = ttk.Scale(menu_frame, orient = 'vertical')
+menu_slider2 = ttk.Scale(menu_frame, orient = 'vertical')
+  
+toggle_frame = ttk.Frame(menu_frame)
+menu_toggle1 = ttk.Checkbutton(toggle_frame, text = 'check 1')
+menu_toggle2 = ttk.Checkbutton(toggle_frame, text = 'check 2')
+
+entry = ttk.Entry(menu_frame)
+```
+
+but now we are going to create another class that is going to inherit the creation of Frame. At first we will start with inheriting `ttk.Frame` as a whole new object. Do you know something as unique about the innate method. In this case we're not just calling self but we are calling the parent and this is because when we use the frame method we have to call a parent or main. This means when you are using the `__init__` you are actually using the `.Frame()` and that frame method needs a parent, which is the window or our App class.
+
+```python
+menu_frame = ttk.Frame(window)
+
+#Replaced with 
+
+class Menu(ttk.Frame):
+	def __init__(self, parent):
+		super().__init__(parent)
+```
+
+This means that when you are implementing this menu frame within your application you are going to need to provide it an argument. In this case when we are providing an argument it is going to be `self` when used in the Class App. This is because previously TK enter was set to the window variable but now TK enter is set to app as the class. Therefore when we are needing to use the "window" variable for our class we actually need to call itself as the parent. **But we still haven't placed the frame**.
+```python
+import tkinter as tk
+from tkinter import ttk
+
+Class App(tk.Tk)
+	def __init__(self, title, size):
+		super().__init__()
+		
+		#window details
+		self.title(title)
+		self.geometry(f'{size[0]}x{size[1]}')
+		self.minsize(size[0],size[1])
+		
+		#widgets
+		self.menu = Menu(self)
+		
+		#run loop
+		self.mainloop()
+
+class Menu(ttk.Frame):
+	def __init__(self, parent):
+		super().__init__(parent)
+
+App('Class based app', (600,600))
+```
+
+To be able to visually see the frame within the window you need to use one of the following layout methods. In our case we're going to call the placement of this frame within the Menu class itself using `self.pack() or use place()`. Unfortunately we're not going to be able to visually see it since a frame is practically empty therefore we're going to add a label as well following the same method type but as packing it the moment that we create the widget. 
+```python
+class Menu(ttk.Frame):
+	def __init__(self, parent):
+		super().__init__(parent)
+		ttk.Label(self,background = 'red').pack(expand = True, fill = 'both')
+		self.place(x = 0, y = 0, relwidth = 0.3, relheight = 1)
+```
+
+But if we remember we have a bunch of additional buttons and other widgets to add to the menu frame. The previous method that we would use is as follows:
+```python
+# main place layout
+menu_frame.place(x = 0, y = 0, relwidth = 0.3, relheight = 1)
+main_frame.place(relx = 0.3, y = 0, relwidth = 0.7, relheight = 1)
+
+# menu widgets
+menu_button1 = ttk.Button(menu_frame, text = 'Button 1')
+menu_button2 = ttk.Button(menu_frame, text = 'Button 2')
+menu_button3 = ttk.Button(menu_frame, text = 'Button 3')
+
+menu_slider1 = ttk.Scale(menu_frame, orient = 'vertical')
+menu_slider2 = ttk.Scale(menu_frame, orient = 'vertical')
+
+toggle_frame = ttk.Frame(menu_frame)
+menu_toggle1 = ttk.Checkbutton(toggle_frame, text = 'check 1')
+menu_toggle2 = ttk.Checkbutton(toggle_frame, text = 'check 2')
+
+entry = ttk.Entry(menu_frame)
+```
+
+Using classes now we are able to add these widgets into our class using a function. Within the Menu class we are going to add these widgets using a function but when we call the parent for the widget, we are going to use self. But we are not going to use self for the check button since these buttons are going to be places within a frame. After this we can place the widgets and we have two common options, make a new function and create a bunch of new attributes or place all of the location methods within the same function. In our case we are going to create one function. 
+
+```python
+class Menu(ttk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.place(x = 0, y = 0, relwidth = 0.3, relheight = 1)
+  
+        self.create_widgets()
+  
+    def create_widgets(self):
+        # create the widgets
+        menu_button1 = ttk.Button(self, text = 'Button 1')
+        menu_button2 = ttk.Button(self, text = 'Button 2')
+        menu_button3 = ttk.Button(self, text = 'Button 3')
+        menu_slider1 = ttk.Scale(self, orient = 'vertical')
+        menu_slider2 = ttk.Scale(self, orient = 'vertical')
+        toggle_frame = ttk.Frame(self)
+        menu_toggle1 = ttk.Checkbutton(toggle_frame, text = 'check 1')
+        menu_toggle2 = ttk.Checkbutton(toggle_frame, text = 'check 2')
+        entry = ttk.Entry(self)
+  
+        # create the grid
+        self.columnconfigure((0,1,2), weight = 1, uniform = 'a')
+        self.rowconfigure((0,1,2,3,4), weight = 1, uniform = 'a')
+
+        # place the widgets
+        menu_button1.grid(row = 0, column = 0, sticky = 'nswe', columnspan = 2)
+        menu_button2.grid(row = 0, column = 2, sticky = 'nswe')
+        menu_button3.grid(row = 1, column = 0, columnspan = 3, sticky = 'nsew')
+        menu_slider1.grid(row = 2, column = 0, rowspan = 2, sticky = 'nsew', pady = 20)
+        menu_slider2.grid(row = 2, column = 2, rowspan = 2, sticky = 'nsew', pady = 20)
+  
+        # toggle layout
+        toggle_frame.grid(row = 4, column = 0, columnspan = 3, sticky = 'nsew')
+        menu_toggle1.pack(side = 'left', expand = True)
+        menu_toggle2.pack(side = 'left', expand = True)
+  
+        # entry layout
+        entry.place(relx = 0.5, rely = 0.95, relwidth = 0.9, anchor = 'center')
+```
+
+### Creating Custom Widgets
+
